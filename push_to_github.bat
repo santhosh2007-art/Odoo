@@ -1,14 +1,17 @@
 @echo off
+cd /d "%~dp0"
 setlocal enabledelayedexpansion
+
 echo ==========================================================
 echo Dayflow HRMS - Push to GitHub
 echo Repository: https://github.com/santhosh2007-art/Odoo
+echo Working Directory: %CD%
 echo ==========================================================
 
 :: Check if git is available in PATH, else use bundled portable Git
 where git >nul 2>nul
 if %errorlevel% equ 0 (
-    set GIT_CMD=git
+    set "GIT_CMD=git"
 ) else if exist "%~dp0.git_tools\cmd\git.exe" (
     set "GIT_CMD=%~dp0.git_tools\cmd\git.exe"
     echo Using portable Git from .git_tools...
@@ -23,7 +26,12 @@ if not exist "%~dp0.git" (
     "%GIT_CMD%" init
 )
 
+:: Configure user identity if needed
+"%GIT_CMD%" config user.name "santhosh2007-art"
+"%GIT_CMD%" config user.email "santhosh2007@users.noreply.github.com"
+
 :: Stage all files
+echo Staging files...
 "%GIT_CMD%" add .
 
 :: Commit
@@ -43,6 +51,6 @@ echo.
 
 echo.
 echo ==========================================================
-echo Push completed!
+echo Push completed! Check: https://github.com/santhosh2007-art/Odoo
 echo ==========================================================
 pause
